@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Infinity Browsing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #fff;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .menu-icon {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+        }
+        
+        .menu-icon:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .menu-dots {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .menu-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #5f6368;
+            border-radius: 50%;
+        }
+        
+        .search-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 0 50px;
+        }
+        
+        .logo-above-search {
+            margin-bottom: 30px;
+        }
+        
+        .logo-above-search img {
+            height: 120px;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 100px 15px 20px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        }
+        
+        .search-input:focus {
+            box-shadow: 0 1px 10px rgba(32, 33, 36, 0.4);
+        }
+        
+        .search-icons {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .search-icon {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-button {
+            background-color: #f8f9fa;
+            color: #3c4043;
+            border: 1px solid #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        
+        .search-button:hover {
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        
+        .search-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result-item {
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .result-title {
+            color: #1a0dab;
+            text-decoration: none;
+            font-size: 20px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        
+        .result-url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .result-description {
+            color: #545454;
+            font-size: 14px;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #5f6368;
+            font-size: 14px;
+            padding: 20px 0;
+            border-top: 1px solid #dfe1e5;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4285f4;
+        }
+        
+        .modal-info {
+            margin-bottom: 20px;
+        }
+        
+        .vote-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .vote-title {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .vote-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .vote-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .vote-button:hover {
+            background-color: #e8f0fe;
+            border-color: #1a73e8;
+        }
+        
+        .popup-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            z-index: 100;
+        }
+        
+        .popup-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .popup-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .popup-item:last-child {
+            border-bottom: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #5f6368;
+        }
+        
+        .error-message {
+            background-color: #fce8e6;
+            border: 1px solid #f28b82;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #c5221f;
+        }
+        
+        /* Top Bar Styles */
+        .top-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-bar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-bar-logo {
+            height: 32px;
+        }
+        
+        .top-bar-search {
+            display: flex;
+            align-items: center;
+            background-color: #f1f3f4;
+            border-radius: 24px;
+            padding: 8px 16px;
+            width: 600px;
+        }
+        
+        .top-bar-search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 4px 8px;
+            font-size: 16px;
+        }
+        
+        .top-bar-search-icons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .top-bar-icon {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .web-content {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            border: none;
+            z-index: 900;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        @media (max-width: 1024px) {
+            .top-bar-search {
+                width: 450px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .search-box {
+                max-width: 90%;
+            }
+            
+            .top-bar-search {
+                width: 300px;
+            }
+            
+            .logo-above-search img {
+                height: 90px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .top-bar-search {
+                width: calc(100vw - 180px);
+                max-width: 400px;
+                min-width: 200px;
+                padding: 6px 12px;
+                border-radius: 20px;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            
+            .top-bar-left {
+                gap: 10px;
+            }
+            
+            .top-bar-logo {
+                height: 28px;
+            }
+            
+            .logo-above-search img {
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar (akan muncul saat membuka website) -->
+    <div class="top-bar" id="topBar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <button class="back-button" id="backButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <img src="https://files.catbox.moe/ltzbrl.png" alt="Vortex" class="top-bar-logo">
+                <div class="top-bar-search">
+                    <input type="text" class="top-bar-search-input" id="topBarSearchInput" placeholder="Cari di Vortex atau ketik URL">
+                    <div class="top-bar-search-icons">
+                        <div class="top-bar-icon" id="topBarCameraIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="top-bar-icon" id="topBarMicrophoneIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="top-bar-right">
+                <div class="menu-icon" id="topBarMenuIcon">
+                    <div class="menu-dots">
+                        <div class="menu-dot"></div>
+                        <div class="menu-dot"></div>
+                        <div class="menu-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Web Content (iframe untuk menampilkan website) -->
+    <iframe class="web-content" id="webContent"></iframe>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://files.catbox.moe/ltzbrl.png" alt="Vortex Infinity Browsing">
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <div class="menu-dots">
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Popup Menu -->
+        <div class="popup-menu" id="popupMenu">
+            <div class="popup-item" id="newPage">Halaman baru</div>
+            <div class="popup-item" id="history">Histori</div>
+            <div class="popup-item" id="downloads">Download</div>
+            <div class="popup-item" id="appInfo">Info aplikasi</div>
+        </div>
+        
+        <section class="search-section" id="searchSection">
+            <div class="logo-above-search">
+                <img src="https://files.catbox.moe/ltzbrl.png" alt="Vortex Infinity Browsing">
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari di Vortex atau ketik URL">
+                <div class="search-icons">
+                    <div class="search-icon" id="cameraIcon">
+                        <!-- SVG Camera Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="search-icon" id="microphoneIcon">
+                        <!-- SVG Microphone Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="search-buttons">
+                <button class="search-button" id="searchButton">Telusuri Vortex</button>
+                <button class="search-button" id="luckyButton">Saya Lagi Beruntung</button>
+            </div>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div id="searchResults"></div>
+        </section>
+        
+        <footer class="footer">
+            <p>Indonesia</p>
+            <p>&copy; Vall-sigma skibidi | 2025</p>
+        </footer>
+    </div>
+    
+    <!-- Modal for App Info -->
+    <div class="modal" id="appInfoModal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModal">&times;</span>
+            <h2 class="modal-title">Info Aplikasi</h2>
+            <div class="modal-info">
+                <p>Halo, selamat datang di Vortex Infinity Browsing aplikasi ini saya peruntukan untuk kalian mencari info / searching, saya menggunakan UI yang cukup mirip seperti di google</p>
+                
+                <br>
+                <p><strong>INFO APLIKASI:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>versi: 1.0.0</li>
+                    <li>Developer: Nauval dev</li>
+                    <li>Date created: Oct, 23, 2025</li>
+                </ul>
+                
+                <br>
+                <p>Anda bisa menggunakan aplikasi ini secara gratis dan tidak bayar,</p>
+                
+                <div class="vote-section">
+                    <p class="vote-title">Berikan penilaian Anda:</p>
+                    <div class="vote-buttons">
+                        <div class="vote-button" id="likeButton">
+                            <!-- Thumbs Up SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                            </svg>
+                            <span>Penjelasan yang bermanfaat</span>
+                        </div>
+                        <div class="vote-button" id="dislikeButton">
+                            <!-- Thumbs Down SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                            </svg>
+                            <span>Penjelasan kurang menarik</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API Configuration - Hardcoded API Key and Search Engine ID
+        const API_KEY = 'AIzaSyBwH1FtpyVRj3gI0HenS5TuIVOlWNTQhrQ';
+        const SEARCH_ENGINE_ID = '343e0f4e983424ed3';
+        
+        // DOM Elements
+        const menuIcon = document.getElementById('menuIcon');
+        const popupMenu = document.getElementById('popupMenu');
+        const appInfoModal = document.getElementById('appInfoModal');
+        const closeModal = document.getElementById('closeModal');
+        const microphoneIcon = document.getElementById('microphoneIcon');
+        const cameraIcon = document.getElementById('cameraIcon');
+        const searchButton = document.getElementById('searchButton');
+        const luckyButton = document.getElementById('luckyButton');
+        const searchInput = document.getElementById('searchInput');
+        const resultsSection = document.getElementById('resultsSection');
+        const searchResultsDiv = document.getElementById('searchResults');
+        const newPageBtn = document.getElementById('newPage');
+        const historyBtn = document.getElementById('history');
+        const downloadsBtn = document.getElementById('downloads');
+        const appInfoBtn = document.getElementById('appInfo');
+        const likeButton = document.getElementById('likeButton');
+        const dislikeButton = document.getElementById('dislikeButton');
+        
+        // Top Bar Elements
+        const topBar = document.getElementById('topBar');
+        const webContent = document.getElementById('webContent');
+        const backButton = document.getElementById('backButton');
+        const topBarSearchInput = document.getElementById('topBarSearchInput');
+        const topBarCameraIcon = document.getElementById('topBarCameraIcon');
+        const topBarMicrophoneIcon = document.getElementById('topBarMicrophoneIcon');
+        const topBarMenuIcon = document.getElementById('topBarMenuIcon');
+        const searchSection = document.getElementById('searchSection');
+        
+        // Fallback search results (jika API tidak berfungsi)
+        const fallbackResults = [
+            {
+                title: "Wikipedia - Ensiklopedia Bebas",
+                url: "https://www.wikipedia.org",
+                description: "Wikipedia adalah sebuah ensiklopedia daring multibahasa yang bebas dan terbuka, yang dijalankan oleh Yayasan Wikimedia, sebuah organisasi nirlaba yang berbasis di Amerika Serikat."
+            },
+            {
+                title: "YouTube - Berbagi Video",
+                url: "https://www.youtube.com",
+                description: "YouTube adalah sebuah situs web berbagi video yang dibuat oleh tiga mantan karyawan PayPal pada Februari 2005. Situs web ini memungkinkan pengguna mengunggah, menonton, dan berbagi video."
+            },
+            {
+                title: "GitHub - Platform Pengembangan Perangkat Lunak",
+                url: "https://www.github.com",
+                description: "GitHub adalah layanan hos web bersama untuk proyek pengembangan perangkat lunak yang menggunakan sistem kendali versi Git dan layanan hosting internet."
+            },
+            {
+                title: "Stack Overflow - Komunitas Programmer",
+                url: "https://www.stackoverflow.com",
+                description: "Stack Overflow adalah situs web tanya jawab untuk programmer profesional dan peminat. Fitur ini dibuat dan diluncurkan pada tahun 2008."
+            },
+            {
+                title: "Kompas - Media Berita Indonesia",
+                url: "https://www.kompas.com",
+                description: "Kompas adalah surat kabar Indonesia yang berkantor pusat di Jakarta. Kompas diterbitkan oleh PT Kompas Media Nusantara yang merupakan bagian dari Kompas Gramedia."
+            }
+        ];
+        
+        // Toggle popup menu
+        menuIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popupMenu.style.display = popupMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // Toggle top bar popup menu
+        topBarMenuIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popupMenu.style.display = popupMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // Close popup when clicking outside
+        document.addEventListener('click', function() {
+            popupMenu.style.display = 'none';
+        });
+        
+        // Menu item click handlers
+        newPageBtn.addEventListener('click', function() {
+            window.open(location.href, '_blank');
+            popupMenu.style.display = 'none';
+        });
+        
+        historyBtn.addEventListener('click', function() {
+            alert('Fitur histori akan ditampilkan di sini');
+            popupMenu.style.display = 'none';
+        });
+        
+        downloadsBtn.addEventListener('click', function() {
+            alert('Halaman download akan ditampilkan di sini');
+            popupMenu.style.display = 'none';
+        });
+        
+        appInfoBtn.addEventListener('click', function() {
+            appInfoModal.style.display = 'block';
+            popupMenu.style.display = 'none';
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            appInfoModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === appInfoModal) {
+                appInfoModal.style.display = 'none';
+            }
+        });
+        
+        // Vote button handlers
+        likeButton.addEventListener('click', function() {
+            alert('Terima kasih atas penilaian positif Anda!');
+            appInfoModal.style.display = 'none';
+        });
+        
+        dislikeButton.addEventListener('click', function() {
+            alert('Terima kasih atas masukan Anda. Kami akan berusaha meningkatkan kualitas aplikasi.');
+            appInfoModal.style.display = 'none';
+        });
+        
+        // Fungsi untuk menampilkan website di iframe
+        function showWebsite(url) {
+            // Sembunyikan halaman pencarian
+            searchSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            document.querySelector('header').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
+            
+            // Tampilkan top bar dan iframe
+            topBar.style.display = 'block';
+            webContent.style.display = 'block';
+            
+            // Set URL iframe
+            webContent.src = url;
+            
+            // Set nilai input di top bar
+            topBarSearchInput.value = url;
+        }
+        
+        // Fungsi untuk kembali ke halaman pencarian
+        function backToSearch() {
+            // Sembunyikan top bar dan iframe
+            topBar.style.display = 'none';
+            webContent.style.display = 'none';
+            
+            // Tampilkan halaman pencarian
+            searchSection.style.display = 'flex';
+            document.querySelector('header').style.display = 'flex';
+            document.querySelector('.footer').style.display = 'block';
+            resultsSection.style.display = 'none';
+            
+            // Reset iframe
+            webContent.src = '';
+        }
+        
+        // Event listener untuk tombol kembali
+        backButton.addEventListener('click', backToSearch);
+        
+        // Fungsi untuk melakukan pencarian menggunakan Google API
+        async function performGoogleSearch(query) {
+            try {
+                // Tampilkan indikator loading
+                searchResultsDiv.innerHTML = '<div class="loading">Mencari di Google...</div>';
+                resultsSection.style.display = 'block';
+                
+                // Panggil Google Custom Search API
+                const response = await fetch(
+                    `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari Google API');
+                }
+                
+                const data = await response.json();
+                displayGoogleResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                // Jika API error, gunakan fallback
+                displayFallbackResults(query);
+            }
+        }
+        
+        // Fungsi untuk menampilkan hasil fallback
+        function displayFallbackResults(query) {
+            searchResultsDiv.innerHTML = '';
+            resultsSection.style.display = 'block';
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.style.marginBottom = '20px';
+            infoDiv.style.color = '#5f6368';
+            infoDiv.innerHTML = `Menampilkan hasil untuk: "${query}"`;
+            searchResultsDiv.appendChild(infoDiv);
+            
+            // Filter hasil fallback berdasarkan query
+            const filteredResults = fallbackResults.filter(result => 
+                result.title.toLowerCase().includes(query.toLowerCase()) || 
+                result.description.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Tampilkan hasil fallback
+            if (filteredResults.length > 0) {
+                filteredResults.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    
+                    const link = document.createElement('a');
+                    link.href = result.url;
+                    link.className = 'result-title';
+                    link.textContent = result.title;
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        showWebsite(result.url);
+                    });
+                    
+                    const urlDiv = document.createElement('div');
+                    urlDiv.className = 'result-url';
+                    urlDiv.textContent = result.url;
+                    
+                    const descDiv = document.createElement('div');
+                    descDiv.className = 'result-description';
+                    descDiv.textContent = result.description;
+                    
+                    resultItem.appendChild(link);
+                    resultItem.appendChild(urlDiv);
+                    resultItem.appendChild(descDiv);
+                    
+                    searchResultsDiv.appendChild(resultItem);
+                });
+            } else {
+                searchResultsDiv.innerHTML = '<p>Tidak ada hasil yang ditemukan untuk pencarian Anda.</p>';
+            }
+        }
+        
+        // Fungsi untuk menampilkan hasil pencarian dari Google API
+        function displayGoogleResults(data) {
+            searchResultsDiv.innerHTML = '';
+            
+            if (!data.items || data.items.length === 0) {
+                searchResultsDiv.innerHTML = '<p>Tidak ada hasil yang ditemukan untuk pencarian Anda.</p>';
+                return;
+            }
+            
+            // Tampilkan info hasil
+            const infoDiv = document.createElement('div');
+            infoDiv.style.marginBottom = '20px';
+            infoDiv.style.color = '#5f6368';
+            infoDiv.innerHTML = `Menampilkan ${data.items.length} hasil dari Google`;
+            searchResultsDiv.appendChild(infoDiv);
+            
+            // Tampilkan hasil pencarian
+            data.items.forEach(item => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                
+                const link = document.createElement('a');
+                link.href = item.link;
+                link.className = 'result-title';
+                link.textContent = item.title;
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showWebsite(item.link);
+                });
+                
+                const urlDiv = document.createElement('div');
+                urlDiv.className = 'result-url';
+                urlDiv.textContent = item.displayLink;
+                
+                const descDiv = document.createElement('div');
+                descDiv.className = 'result-description';
+                descDiv.textContent = item.snippet;
+                
+                resultItem.appendChild(link);
+                resultItem.appendChild(urlDiv);
+                resultItem.appendChild(descDiv);
+                
+                searchResultsDiv.appendChild(resultItem);
+            });
+            
+            // Scroll ke hasil pencarian
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Fungsi untuk mengarahkan langsung ke URL jika input adalah URL
+        function navigateToUrl(input) {
+            // Cek apakah input adalah URL
+            if (input.includes('.') && (input.includes('http://') || input.includes('https://') || 
+                input.includes('www.') || input.endsWith('.com') || input.endsWith('.id') || 
+                input.endsWith('.org') || input.endsWith('.net'))) {
+                
+                let url = input;
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                
+                showWebsite(url);
+                return true;
+            }
+            return false;
+        }
+        
+        // Event listener untuk tombol pencarian
+        searchButton.addEventListener('click', function() {
+            const query = searchInput.value.trim();
+            
+            if (!query) {
+                alert('Masukkan kata kunci pencarian');
+                return;
+            }
+            
+            // Cek apakah input adalah URL
+            if (!navigateToUrl(query)) {
+                // Jika bukan URL, lakukan pencarian
+                performGoogleSearch(query);
+            }
+        });
+        
+        // Event listener untuk tombol "Saya Lagi Beruntung"
+        luckyButton.addEventListener('click', function() {
+            const query = searchInput.value.trim();
+            
+            if (!query) {
+                alert('Masukkan kata kunci pencarian');
+                return;
+            }
+            
+            // Cek apakah input adalah URL
+            if (!navigateToUrl(query)) {
+                // Jika bukan URL, arahkan ke hasil pertama dari pencarian
+                if (fallbackResults.length > 0) {
+                    showWebsite(fallbackResults[0].url);
+                } else {
+                    alert('Tidak ada hasil yang ditemukan untuk pencarian Anda.');
+                }
+            }
+        });
+        
+        // Event listener untuk tekan Enter di input pencarian
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                
+                if (!query) {
+                    alert('Masukkan kata kunci pencarian');
+                    return;
+                }
+                
+                // Cek apakah input adalah URL
+                if (!navigateToUrl(query)) {
+                    // Jika bukan URL, lakukan pencarian
+                    performGoogleSearch(query);
+                }
+            }
+        });
+        
+        // Event listener untuk tekan Enter di top bar input
+        topBarSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = topBarSearchInput.value.trim();
+                
+                if (!query) {
+                    alert('Masukkan kata kunci pencarian');
+                    return;
+                }
+                
+                // Cek apakah input adalah URL
+                if (!navigateToUrl(query)) {
+                    // Jika bukan URL, lakukan pencarian menggunakan Google API
+                    backToSearch();
+                    searchInput.value = query;
+                    performGoogleSearch(query);
+                }
+            }
+        });
+        
+        // Speech Recognition (Fitur Suara) untuk input utama
+        microphoneIcon.addEventListener('click', function() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Browser Anda tidak mendukung fitur pengenalan suara.');
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.lang = 'id-ID';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            
+            recognition.start();
+            
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                searchInput.value = speechResult;
+                
+                // Otomatis melakukan pencarian setelah suara terdeteksi
+                setTimeout(() => {
+                    performGoogleSearch(speechResult);
+                }, 500);
+            };
+            
+            recognition.onspeechend = function() {
+                recognition.stop();
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Error occurred in recognition: ' + event.error);
+                alert('Terjadi kesalahan dalam pengenalan suara: ' + event.error);
+            };
+        });
+        
+        // Speech Recognition untuk top bar
+        topBarMicrophoneIcon.addEventListener('click', function() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Browser Anda tidak mendukung fitur pengenalan suara.');
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.lang = 'id-ID';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            
+            recognition.start();
+            
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                topBarSearchInput.value = speechResult;
+            };
+            
+            recognition.onspeechend = function() {
+                recognition.stop();
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Error occurred in recognition: ' + event.error);
+                alert('Terjadi kesalahan dalam pengenalan suara: ' + event.error);
+            };
+        });
+        
+        // Camera/Upload Image (Fitur Kamera) untuk input utama
+        cameraIcon.addEventListener('click', function() {
+            // Buat input file tersembunyi
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.capture = 'environment'; // Untuk kamera belakang di perangkat mobile
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    alert(`Gambar "${file.name}" telah dipilih. Fitur pencarian gambar akan segera tersedia.`);
+                    // Di sini Anda bisa menambahkan logika untuk mengunggah gambar dan melakukan pencarian gambar
+                }
+            });
+            
+            fileInput.click();
+        });
+        
+        // Camera/Upload Image untuk top bar
+        topBarCameraIcon.addEventListener('click', function() {
+            // Buat input file tersembunyi
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.capture = 'environment'; // Untuk kamera belakang di perangkat mobile
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    alert(`Gambar "${file.name}" telah dipilih. Fitur pencarian gambar akan segera tersedia.`);
+                    // Di sini Anda bisa menambahkan logika untuk mengunggah gambar dan melakukan pencarian gambar
+                }
+            });
+            
+            fileInput.click();
+        });
+    </script>
+</body>
+</html>
